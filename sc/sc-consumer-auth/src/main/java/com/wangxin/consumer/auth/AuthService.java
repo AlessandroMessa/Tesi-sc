@@ -1,4 +1,4 @@
-package com.wangxin.consumer.jsp.temp;
+package com.wangxin.consumer.auth;
 
 import com.wangxin.common.api.model.auth.PermissionVo;
 import com.wangxin.common.api.model.auth.Role;

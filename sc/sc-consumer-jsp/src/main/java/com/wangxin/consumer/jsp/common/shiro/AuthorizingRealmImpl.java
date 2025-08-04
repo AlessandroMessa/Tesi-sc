@@ -6,8 +6,9 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import com.wangxin.consumer.auth.AuthService;
 import com.wangxin.consumer.jsp.common.shiro.vo.Principal;
-import com.wangxin.consumer.jsp.temp.AuthService;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
