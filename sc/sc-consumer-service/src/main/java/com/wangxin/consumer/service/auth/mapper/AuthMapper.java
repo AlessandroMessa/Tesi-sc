@@ -21,6 +21,7 @@ public class AuthMapper {
         dto.setUsername(src.getUsername());
         dto.setPasswordHash(src.getPassword());
         dto.setSaltHex(src.getSalt());
+        dto.setTrueName(src.getTrueName());
         // mappa altri campi se servono
         return dto;
     }

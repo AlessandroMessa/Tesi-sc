@@ -3,28 +3,28 @@ package com.wangxin.consumer.jsp.common.shiro.vo;
 import java.io.Serializable;
 import java.util.List;
 
-import com.wangxin.common.api.model.auth.Role;
-import com.wangxin.common.api.model.auth.User;
+import com.wangxin.consumer.service.auth.dto.RoleDto;
+import com.wangxin.consumer.service.auth.dto.UserDto;
 
 public class Principal implements Serializable {
     private static final long serialVersionUID = -6477583820961243636L;
 
-    private User user;
-    private List<Role> roles;
+    private UserDto user;
+    private List<RoleDto> roles;
 
-    public User getUser() {
+    public UserDto getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserDto user) {
         this.user = user;
     }
 
-    public List<Role> getRoles() {
+    public List<RoleDto> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(List<RoleDto> roles) {
         this.roles = roles;
     }
 

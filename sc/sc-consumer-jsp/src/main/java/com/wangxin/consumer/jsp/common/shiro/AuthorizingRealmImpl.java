@@ -59,8 +59,8 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
         byte[] salt = saltService.decodeHex(user.getSaltHex());
 
         Principal principal = new Principal();
-        principal.setUser(AuthMapper.toRemote(user));
-        principal.setRoles(AuthMapper.toRoleRemoteList(authService.findRoleByUserId(user.getId())));
+        principal.setUser(user);
+        principal.setRoles(authService.findRoleByUserId(user.getId()));
 
         return new SimpleAuthenticationInfo(
                 principal,
