@@ -1,9 +1,9 @@
-package com.wangxin.consumer.api;
+package com.wangxin.consumer.service.auth.impl;
 
 import com.wangxin.common.api.model.auth.PermissionVo;
 import com.wangxin.common.api.model.auth.Role;
 import com.wangxin.common.api.model.auth.User;
-import com.wangxin.consumer.auth.AuthService;
+import com.wangxin.consumer.service.auth.AuthService;
 import com.wangxin.feign.web.remote.auth.AuthRemoteClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

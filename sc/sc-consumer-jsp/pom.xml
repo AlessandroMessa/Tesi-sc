@@ -174,7 +174,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.wangxin</groupId>
-			<artifactId>sc-consumer-auth</artifactId>
+			<artifactId>sc-consumer-service</artifactId>
 			<version>1.0</version>
 			<scope>compile</scope>
 		</dependency>

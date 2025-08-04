@@ -26,8 +26,7 @@
 		<module>sc-provider</module>
 		<module>sc-feign</module>
 		<module>sc-turbine</module>
-		<module>sc-consumer-auth</module>
-		<module>sc-consumer-api</module>
+		<module>sc-consumer-service</module>
 	</modules>
 
 	<properties>

@@ -9,7 +9,7 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>sc-consumer-auth</artifactId>
+    <artifactId>sc-consumer-service</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -20,6 +20,16 @@
         <dependency>
             <groupId>com.wangxin</groupId>
             <artifactId>sc-commons</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.wangxin</groupId>
+            <artifactId>sc-feign</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>

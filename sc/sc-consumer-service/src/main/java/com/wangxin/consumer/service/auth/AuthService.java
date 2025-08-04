@@ -1,4 +1,4 @@
-package com.wangxin.consumer.auth;
+package com.wangxin.consumer.service.auth;
 
 import com.wangxin.common.api.model.auth.PermissionVo;
 import com.wangxin.common.api.model.auth.Role;
