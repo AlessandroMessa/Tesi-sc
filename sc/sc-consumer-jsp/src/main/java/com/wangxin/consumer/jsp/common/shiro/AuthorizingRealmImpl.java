@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import com.wangxin.consumer.jsp.common.shiro.vo.Principal;
+import com.wangxin.consumer.jsp.temp.AuthService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -32,7 +33,7 @@ import com.wangxin.common.api.common.salt.Encodes;
 import com.wangxin.common.api.model.auth.PermissionVo;
 import com.wangxin.common.api.model.auth.Role;
 import com.wangxin.common.api.model.auth.User;
-import com.wangxin.feign.web.remote.auth.AuthRemoteClient;
+;
 
 /**
  * @author Vincent.wang
@@ -42,7 +43,7 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
     private static final Logger log = LoggerFactory.getLogger(AuthorizingRealmImpl.class);
 
     @Autowired
-    private AuthRemoteClient authRemoteClient;
+    private AuthService authService;
 
     /**
      * 认证回调函数,登录时调用.
@@ -62,7 +63,7 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
                 throw new BusinessException("user.illegal.login.error", "非法用户身份");
             }
             // User user = findUserByName(username);
-            User user = authRemoteClient.findUserByName(username);
+            User user = authService.findUserByName(username);
 
             if (null == user) {
                 log.error("## 用户不存在={} .", username);
@@ -74,10 +75,10 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
             Principal principal = new Principal();
             principal.setUser(user);
             // principal.setRoles(findRoleByUserId(user.getId()));
-            principal.setRoles(authRemoteClient.findRoleByUserId(user.getId()));
+            principal.setRoles(authService.findRoleByUserId(user.getId()));
 
             // SecurityUtils.getSubject().getSession().setAttribute(Constants.PERMISSION_SESSION, getPermissions(user.getId()));
-            SecurityUtils.getSubject().getSession().setAttribute(Constants.PERMISSION_SESSION, authRemoteClient.getPermissions(user.getId()));
+            SecurityUtils.getSubject().getSession().setAttribute(Constants.PERMISSION_SESSION, authService.getPermissions(user.getId()));
 
             SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, user.getPassword(), ByteSource.Util.bytes(salt), getName());
             return info;
@@ -102,7 +103,7 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
         Object permisObj = session.getAttribute(Constants.PERMISSION_URL);
         if (null == permisObj) {
             // Collection<PermissionVo> pers = getPermissions(principal.getUser().getId());
-            Collection<PermissionVo> pers = authRemoteClient.getPermissions(principal.getUser().getId());
+            Collection<PermissionVo> pers = authService.getPermissions(principal.getUser().getId());
             for (PermissionVo permission : pers) {
                 permissions.add(permission.getUrl());
                 if (CollectionUtils.isNotEmpty(permission.getChildren())) {
@@ -120,7 +121,7 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
         Object roleNameObj = session.getAttribute(Constants.ROLE_CODE);
         if (null == roleNameObj) {
             // for (Role role : findRoleByUserId(principal.getUser().getId())) {
-            for (Role role : authRemoteClient.findRoleByUserId(principal.getUser().getId())) {
+            for (Role role : authService.findRoleByUserId(principal.getUser().getId())) {
                 roleCodes.add(role.getCode());
             }
             session.setAttribute(Constants.ROLE_CODE, roleCodes);
