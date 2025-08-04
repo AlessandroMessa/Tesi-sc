@@ -172,7 +172,13 @@
 			<optional>true</optional>
 			<scope>true</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.wangxin</groupId>
+            <artifactId>sc-consumer-api</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<!-- mvn clean install -->
