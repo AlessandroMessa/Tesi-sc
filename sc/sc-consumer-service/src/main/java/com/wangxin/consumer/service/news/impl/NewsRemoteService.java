@@ -1,10 +1,12 @@
 package com.wangxin.consumer.service.news.impl;
 
 import com.wangxin.consumer.service.news.NewsService;
+import com.wangxin.consumer.service.news.dto.NewsDto;
+import com.wangxin.consumer.service.news.mapper.NewsMapper;
+import com.wangxin.consumer.service.news.mapper.PageInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wangxin.common.api.model.simple.News;
 import com.github.pagehelper.PageInfo;
 import com.wangxin.feign.web.remote.simple.NewsRemoteClient;
 
@@ -15,27 +17,27 @@ public class NewsRemoteService implements NewsService {
     private  NewsRemoteClient newsRemoteClient;
 
     @Override
-    public News getNews() {
-        return newsRemoteClient.getNews();
+    public NewsDto getNews() {
+        return NewsMapper.toDto(newsRemoteClient.getNews());
     }
 
     @Override
-    public boolean addNews(News news) {
-        return newsRemoteClient.addNews(news);
+    public boolean addNews(NewsDto news) {
+        return newsRemoteClient.addNews(NewsMapper.toRemote(news));
     }
 
     @Override
-    public News findNewsById(String id) {
-        return newsRemoteClient.findNewsById(id);
+    public NewsDto findNewsById(String id) {
+        return NewsMapper.toDto(newsRemoteClient.findNewsById(id));
     }
 
     @Override
-    public boolean editNews(News news) {
-        return newsRemoteClient.editNews(news);
+    public boolean editNews(NewsDto news) {
+        return newsRemoteClient.editNews(NewsMapper.toRemote(news));
     }
 
     @Override
-    public PageInfo<News> findNewsByPage(String keywords, Integer pageNum) {
-        return newsRemoteClient.findNewsByPage(keywords, pageNum);
+    public PageInfo<NewsDto> findNewsByPage(String keywords, Integer pageNum) {
+        return PageInfoMapper.map(newsRemoteClient.findNewsByPage(keywords, pageNum));
     }
 }
