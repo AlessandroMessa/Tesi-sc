@@ -7,127 +7,102 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import com.wangxin.consumer.service.auth.AuthService;
+import com.wangxin.consumer.service.auth.dto.PermissionDto;
+import com.wangxin.consumer.service.auth.dto.RoleDto;
+import com.wangxin.consumer.service.auth.dto.UserDto;
+import com.wangxin.consumer.service.auth.mapper.AuthMapper;
+import com.wangxin.consumer.service.common.ConsumerConstants;
+import com.wangxin.consumer.service.common.SaltService;
+import com.wangxin.consumer.service.exception.InvalidParameterException;
 import com.wangxin.consumer.jsp.common.shiro.vo.Principal;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.authz.*;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.wangxin.common.api.common.constants.Constants;
-import com.wangxin.common.api.common.exception.BusinessException;
-import com.wangxin.common.api.common.salt.Encodes;
-import com.wangxin.common.api.model.auth.PermissionVo;
-import com.wangxin.common.api.model.auth.Role;
-import com.wangxin.common.api.model.auth.User;
-;
-
-/**
- * @author Vincent.wang
- */
 public class AuthorizingRealmImpl extends AuthorizingRealm {
 
     private static final Logger log = LoggerFactory.getLogger(AuthorizingRealmImpl.class);
-
     @Autowired
     private AuthService authService;
+    @Autowired
+    private SaltService saltService;
 
-    /**
-     * 认证回调函数,登录时调用.
-     */
+
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug("## 正在验证用户登录...");
-            }
-
-            UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
-            String username = token.getUsername();
-
-            if (StringUtils.isBlank(username)) {
-                log.error("## 非法登录 .");
-                throw new BusinessException("user.illegal.login.error", "非法用户身份");
-            }
-            // User user = findUserByName(username);
-            User user = authService.findUserByName(username);
-
-            if (null == user) {
-                log.error("## 用户不存在={} .", username);
-                throw new BusinessException("user.login.error", "账号或密码错误");
-            }
-
-            byte[] salt = Encodes.decodeHex(user.getSalt());
-
-            Principal principal = new Principal();
-            principal.setUser(user);
-            // principal.setRoles(findRoleByUserId(user.getId()));
-            principal.setRoles(authService.findRoleByUserId(user.getId()));
-
-            // SecurityUtils.getSubject().getSession().setAttribute(Constants.PERMISSION_SESSION, getPermissions(user.getId()));
-            SecurityUtils.getSubject().getSession().setAttribute(Constants.PERMISSION_SESSION, authService.getPermissions(user.getId()));
-
-            SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, user.getPassword(), ByteSource.Util.bytes(salt), getName());
-            return info;
-        } catch (AuthenticationException e) {
-            log.error("# doGetAuthenticationInfo error , message={}", e.getMessage());
-            e.printStackTrace();
-            throw e;
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
+            throws AuthenticationException {
+        UsernamePasswordToken upToken = (UsernamePasswordToken) token;
+        String username = upToken.getUsername();
+        if (StringUtils.isBlank(username)) {
+            log.error("Illegal login attempt: blank username");
+            throw new InvalidParameterException("user.illegal.login.error");
         }
 
+        UserDto user = authService.findUserByName(username);
+        if (user == null) {
+            log.error("User not found: {}", username);
+            throw new InvalidParameterException("user.login.error");
+        }
+
+        byte[] salt = saltService.decodeHex(user.getSaltHex());
+
+        Principal principal = new Principal();
+        principal.setUser(AuthMapper.toRemote(user));
+        principal.setRoles(AuthMapper.toRoleRemoteList(authService.findRoleByUserId(user.getId())));
+
+        return new SimpleAuthenticationInfo(
+                principal,
+                user.getPasswordHash(),
+                ByteSource.Util.bytes(salt),
+                getName()
+        );
     }
 
-    /**
-     * 授权查询回调函数, 进行鉴权但缓存中无用户的授权信息时调用.
-     */
-    @SuppressWarnings("unchecked")
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        Principal principal = (Principal) principals.fromRealm(getName()).iterator().next();
+        Collection<Principal> fromRealm = principals.fromRealm(getName());
+        if (fromRealm == null || fromRealm.isEmpty()) {
+            throw new AuthorizationException("No principals found for realm " + getName());
+        }
+        Principal principal = fromRealm.iterator().next();
+
         Session session = SecurityUtils.getSubject().getSession();
-        // ---
-        Set<String> permissions = new HashSet<String>();
-        Object permisObj = session.getAttribute(Constants.PERMISSION_URL);
-        if (null == permisObj) {
-            // Collection<PermissionVo> pers = getPermissions(principal.getUser().getId());
-            Collection<PermissionVo> pers = authService.getPermissions(principal.getUser().getId());
-            for (PermissionVo permission : pers) {
-                permissions.add(permission.getUrl());
-                if (CollectionUtils.isNotEmpty(permission.getChildren())) {
-                    for (PermissionVo childrenPer : permission.getChildren()) {
-                        permissions.add(childrenPer.getUrl());
+
+        @SuppressWarnings("unchecked")
+        Set<String> permissions = (Set<String>) session.getAttribute(ConsumerConstants.PERMISSION_URL);
+        if (permissions == null) {
+            permissions = new HashSet<String>();
+            for (PermissionDto p : authService.getPermissions(principal.getUser().getId())) {
+                permissions.add(p.getUrl());
+                if (CollectionUtils.isNotEmpty(p.getChildren())) {
+                    for (PermissionDto c : p.getChildren()) {
+                        permissions.add(c.getUrl());
                     }
                 }
             }
-            session.setAttribute(Constants.PERMISSION_URL, permissions);
-        } else {
-            permissions = (Set<String>) permisObj;
+            session.setAttribute(ConsumerConstants.PERMISSION_URL, permissions);
         }
 
-        Set<String> roleCodes = new HashSet<String>();
-        Object roleNameObj = session.getAttribute(Constants.ROLE_CODE);
-        if (null == roleNameObj) {
-            // for (Role role : findRoleByUserId(principal.getUser().getId())) {
-            for (Role role : authService.findRoleByUserId(principal.getUser().getId())) {
-                roleCodes.add(role.getCode());
+        @SuppressWarnings("unchecked")
+        Set<String> roleCodes = (Set<String>) session.getAttribute(ConsumerConstants.ROLE_CODE);
+        if (roleCodes == null) {
+            roleCodes = new HashSet<String>();
+            for (RoleDto r : authService.findRoleByUserId(principal.getUser().getId())) {
+                roleCodes.add(r.getCode());
             }
-            session.setAttribute(Constants.ROLE_CODE, roleCodes);
-        } else {
-            roleCodes = (Set<String>) roleNameObj;
+            session.setAttribute(ConsumerConstants.ROLE_CODE, roleCodes);
         }
 
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
@@ -136,14 +111,10 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
         return info;
     }
 
-    /**
-     * 设定Password校验的Hash算法与迭代次数.
-     */
     @PostConstruct
     public void initCredentialsMatcher() {
         HashedCredentialsMatcher matcher = new HashedCredentialsMatcher("SHA-1");
         matcher.setHashIterations(1024);
         setCredentialsMatcher(matcher);
     }
-
 }
