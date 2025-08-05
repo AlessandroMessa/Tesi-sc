@@ -13,6 +13,7 @@ import com.wangxin.consumer.service.news.dto.NewsDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,11 +25,8 @@ public class NewsController {
 
     private static final Logger log = LoggerFactory.getLogger(NewsController.class);
 
-    private final NewsService newsService;
-
-    public NewsController(NewsService newsService) {
-        this.newsService = newsService;
-    }
+    @Autowired
+    private NewsService newsService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
