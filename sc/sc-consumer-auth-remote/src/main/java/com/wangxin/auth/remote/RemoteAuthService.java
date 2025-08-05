@@ -1,6 +1,7 @@
 package com.wangxin.auth.remote;
 
 
+import com.wangxin.auth.remote.client.AuthRemoteClient;
 import com.wangxin.auth.remote.mapper.AuthMapper;
 import com.wangxin.consumer.contract.auth.AuthService;
 import com.wangxin.consumer.contract.auth.dto.PermissionDto;

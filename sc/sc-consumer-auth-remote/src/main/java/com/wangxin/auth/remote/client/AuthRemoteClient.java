@@ -1,10 +1,9 @@
-package com.wangxin.auth.remote;
+package com.wangxin.auth.remote.client;
 
 import com.wangxin.common.api.common.exception.BusinessException;
 import com.wangxin.common.api.model.auth.PermissionVo;
 import com.wangxin.common.api.model.auth.Role;
 import com.wangxin.common.api.model.auth.User;
-import com.wangxin.auth.remote.hystrix.AuthRemoteClientHystrix;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

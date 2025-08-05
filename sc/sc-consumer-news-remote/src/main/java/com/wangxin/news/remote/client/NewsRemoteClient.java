@@ -1,9 +1,8 @@
-package com.wangxin.news.remote;
+package com.wangxin.news.remote.client;
 
 import com.github.pagehelper.PageInfo;
 import com.wangxin.common.api.common.exception.BusinessException;
 import com.wangxin.common.api.model.simple.News;
-import com.wangxin.news.remote.hystrix.NewsRemoteClientHystrix;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

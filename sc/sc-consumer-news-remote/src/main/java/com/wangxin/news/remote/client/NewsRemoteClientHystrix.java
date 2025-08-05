@@ -1,11 +1,10 @@
-package com.wangxin.news.remote.hystrix;
+package com.wangxin.news.remote.client;
 
 import com.github.pagehelper.PageInfo;
 import com.wangxin.common.api.common.exception.BusinessException;
 import com.wangxin.common.api.common.exception.RemoteRequestExcepton;
 import com.wangxin.common.api.model.simple.News;
 
-import com.wangxin.news.remote.NewsRemoteClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

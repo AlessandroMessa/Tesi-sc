@@ -1,6 +1,5 @@
-package com.wangxin.auth.remote.hystrix;
+package com.wangxin.auth.remote.client;
 
-import com.wangxin.auth.remote.AuthRemoteClient;
 import com.wangxin.common.api.common.exception.BusinessException;
 import com.wangxin.common.api.common.exception.RemoteRequestExcepton;
 import com.wangxin.common.api.model.auth.PermissionVo;
