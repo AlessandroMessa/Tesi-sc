@@ -6,13 +6,14 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import com.wangxin.consumer.service.auth.AuthService;
-import com.wangxin.consumer.service.auth.dto.PermissionDto;
-import com.wangxin.consumer.service.auth.dto.RoleDto;
-import com.wangxin.consumer.service.auth.dto.UserDto;
+import com.wangxin.consumer.contract.auth.AuthService;
+import com.wangxin.consumer.contract.auth.dto.PermissionDto;
+import com.wangxin.consumer.contract.auth.dto.RoleDto;
+import com.wangxin.consumer.contract.auth.dto.UserDto;
+import com.wangxin.consumer.contract.auth.exception.InvalidParameterException;
 import com.wangxin.consumer.service.common.ConsumerConstants;
 import com.wangxin.consumer.service.common.SaltService;
-import com.wangxin.consumer.contract.news.exception.InvalidParameterException;
+
 import com.wangxin.consumer.jsp.common.shiro.vo.Principal;
 
 import org.apache.commons.collections.CollectionUtils;

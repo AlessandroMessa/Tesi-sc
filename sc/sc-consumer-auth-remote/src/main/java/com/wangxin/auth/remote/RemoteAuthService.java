@@ -1,14 +1,11 @@
-package com.wangxin.consumer.service.auth.impl;
+package com.wangxin.auth.remote;
 
-import com.wangxin.common.api.model.auth.PermissionVo;
-import com.wangxin.common.api.model.auth.Role;
-import com.wangxin.common.api.model.auth.User;
-import com.wangxin.consumer.service.auth.AuthService;
-import com.wangxin.consumer.service.auth.dto.PermissionDto;
-import com.wangxin.consumer.service.auth.dto.RoleDto;
-import com.wangxin.consumer.service.auth.dto.UserDto;
-import com.wangxin.consumer.service.auth.mapper.AuthMapper;
-import com.wangxin.feign.web.remote.auth.AuthRemoteClient;
+
+import com.wangxin.auth.remote.mapper.AuthMapper;
+import com.wangxin.consumer.contract.auth.AuthService;
+import com.wangxin.consumer.contract.auth.dto.PermissionDto;
+import com.wangxin.consumer.contract.auth.dto.RoleDto;
+import com.wangxin.consumer.contract.auth.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,10 +1,12 @@
 package com.wangxin.consumer.jsp.common.shiro.vo;
 
+import com.wangxin.consumer.contract.auth.dto.RoleDto;
+import com.wangxin.consumer.contract.auth.dto.UserDto;
+
 import java.io.Serializable;
 import java.util.List;
 
-import com.wangxin.consumer.service.auth.dto.RoleDto;
-import com.wangxin.consumer.service.auth.dto.UserDto;
+
 
 public class Principal implements Serializable {
     private static final long serialVersionUID = -6477583820961243636L;

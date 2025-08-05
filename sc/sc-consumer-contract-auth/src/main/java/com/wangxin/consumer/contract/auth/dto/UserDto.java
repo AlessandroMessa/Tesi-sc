@@ -1,6 +1,5 @@
-package com.wangxin.consumer.service.auth.dto;
+package com.wangxin.consumer.contract.auth.dto;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data

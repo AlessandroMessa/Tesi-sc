@@ -1,12 +1,12 @@
 // com.wangxin.consumer.service.auth.mapper.AuthMapper.java
-package com.wangxin.consumer.service.auth.mapper;
+package com.wangxin.auth.remote.mapper;
 
 import com.wangxin.common.api.model.auth.PermissionVo;
 import com.wangxin.common.api.model.auth.Role;
 import com.wangxin.common.api.model.auth.User;
-import com.wangxin.consumer.service.auth.dto.PermissionDto;
-import com.wangxin.consumer.service.auth.dto.RoleDto;
-import com.wangxin.consumer.service.auth.dto.UserDto;
+import com.wangxin.consumer.contract.auth.dto.PermissionDto;
+import com.wangxin.consumer.contract.auth.dto.RoleDto;
+import com.wangxin.consumer.contract.auth.dto.UserDto;
 
 import java.util.Collections;
 import java.util.List;

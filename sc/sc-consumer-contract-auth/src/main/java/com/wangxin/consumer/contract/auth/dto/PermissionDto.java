@@ -1,4 +1,4 @@
-package com.wangxin.consumer.service.auth.dto;
+package com.wangxin.consumer.contract.auth.dto;
 
 import lombok.Data;
 

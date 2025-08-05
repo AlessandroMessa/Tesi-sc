@@ -1,6 +1,6 @@
 package com.wangxin.consumer.thymeleaf.web.controller.auth;
 
-import com.wangxin.common.api.model.auth.User;
+import com.wangxin.consumer.contract.auth.dto.UserDto;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -26,21 +26,21 @@ public class LoginController {
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
     String login(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserDto());
         log.info("#去登录");
         return "view/login/login";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@ModelAttribute("userForm") User user, RedirectAttributes redirectAttributes) {
+    public String login(@ModelAttribute("userForm") UserDto user, RedirectAttributes redirectAttributes) {
         log.info("# 登录中 ");
-        if (null == user || StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getPassword())) {
+        if (null == user || StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getPasswordHash())) {
             log.error("# 账号或密码错误");
             return "login";
         }
 
         String username = user.getUsername();
-        UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
+        UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPasswordHash());
         // 获取当前的Subject
         Subject currentUser = SecurityUtils.getSubject();
         try {

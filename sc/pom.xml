@@ -24,11 +24,12 @@
 		<module>sc-consumer-thymeleaf</module>
 		<module>sc-hystrix</module>
 		<module>sc-provider</module>
-		<module>sc-feign</module>
 		<module>sc-turbine</module>
 		<module>sc-consumer-service</module>
         <module>sc-consumer-contract-news</module>
 		<module>sc-consumer-news-remote</module>
+        <module>sc-consumer-contract-auth</module>
+		<module>sc-consumer-auth-remote</module>
 	</modules>
 
 	<properties>

@@ -1,11 +1,11 @@
-package com.wangxin.feign.web.hystrix.auth;
+package com.wangxin.auth.remote.hystrix;
 
+import com.wangxin.auth.remote.AuthRemoteClient;
 import com.wangxin.common.api.common.exception.BusinessException;
 import com.wangxin.common.api.common.exception.RemoteRequestExcepton;
 import com.wangxin.common.api.model.auth.PermissionVo;
 import com.wangxin.common.api.model.auth.Role;
 import com.wangxin.common.api.model.auth.User;
-import com.wangxin.feign.web.remote.auth.AuthRemoteClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
