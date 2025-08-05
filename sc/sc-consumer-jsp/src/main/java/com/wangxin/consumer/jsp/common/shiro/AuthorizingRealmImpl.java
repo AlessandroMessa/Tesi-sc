@@ -1,36 +1,32 @@
 package com.wangxin.consumer.jsp.common.shiro;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-
-import com.wangxin.consumer.contract.auth.AuthService;
+import com.wangxin.consumer.contract.auth.dto.ConsumerConstants;
 import com.wangxin.consumer.contract.auth.dto.PermissionDto;
 import com.wangxin.consumer.contract.auth.dto.RoleDto;
 import com.wangxin.consumer.contract.auth.dto.UserDto;
 import com.wangxin.consumer.contract.auth.exception.InvalidParameterException;
-import com.wangxin.consumer.contract.auth.dto.ConsumerConstants;
-import com.wangxin.consumer.contract.auth.SaltService;
-
 import com.wangxin.consumer.contract.auth.facade.AuthenticationFacade;
 import com.wangxin.consumer.jsp.common.shiro.vo.Principal;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.authz.*;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.PostConstruct;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AuthorizingRealmImpl extends AuthorizingRealm {
 

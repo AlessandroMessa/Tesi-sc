@@ -2,11 +2,10 @@ package com.wangxin.consumer.thymeleaf.common;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
+
 
 import javax.servlet.ServletContext;
 
-import com.wangxin.common.api.common.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

@@ -25,7 +25,6 @@
 		<module>sc-hystrix</module>
 		<module>sc-provider</module>
 		<module>sc-turbine</module>
-		<module>sc-consumer-service</module>
         <module>sc-consumer-contract-news</module>
 		<module>sc-consumer-news-remote</module>
         <module>sc-consumer-contract-auth</module>

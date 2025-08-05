@@ -12,6 +12,10 @@ import com.wangxin.common.api.common.salt.Encodes;
 import com.wangxin.common.api.model.auth.PermissionVo;
 import com.wangxin.common.api.model.auth.Role;
 import com.wangxin.common.api.model.auth.User;
+import com.wangxin.consumer.contract.auth.dto.PermissionDto;
+import com.wangxin.consumer.contract.auth.dto.RoleDto;
+import com.wangxin.consumer.contract.auth.dto.UserDto;
+import com.wangxin.consumer.contract.auth.facade.AuthenticationFacade;
 import com.wangxin.consumer.freemarker.common.shiro.vo.Principal;
 import com.wangxin.feign.web.remote.auth.AuthRemoteClient;
 import org.apache.commons.collections.CollectionUtils;
@@ -41,7 +45,7 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
     private static final Logger log = LoggerFactory.getLogger(AuthorizingRealmImpl.class);
 
     @Autowired
-    private AuthRemoteClient authRemoteClient;
+    private AuthenticationFacade authenticationFacade;
 
     /**
      * 认证回调函数,登录时调用.
@@ -61,24 +65,23 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
                 throw new BusinessException("user.illegal.login.error", "非法用户身份");
             }
             // User user = findUserByName(username);
-            User user = authRemoteClient.findUserByName(username);
+            UserDto user = authenticationFacade.findUserByName(username);
 
             if (null == user) {
                 log.error("## 用户不存在={} .", username);
                 throw new BusinessException("user.login.error", "账号或密码错误");
             }
 
-            byte[] salt = Encodes.decodeHex(user.getSalt());
+            byte[] salt = authenticationFacade.decodeHex(user.getSaltHex());
 
             Principal principal = new Principal();
             principal.setUser(user);
-            // principal.setRoles(findRoleByUserId(user.getId()));
-            principal.setRoles(authRemoteClient.findRoleByUserId(user.getId()));
+            principal.setRoles(authenticationFacade.findRoleByUserId(user.getId()));
 
             // SecurityUtils.getSubject().getSession().setAttribute(Constants.PERMISSION_SESSION, getPermissions(user.getId()));
-            SecurityUtils.getSubject().getSession().setAttribute(Constants.PERMISSION_SESSION, authRemoteClient.getPermissions(user.getId()));
+            SecurityUtils.getSubject().getSession().setAttribute(Constants.PERMISSION_SESSION, authenticationFacade.getPermissions(user.getId()));
 
-            SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, user.getPassword(), ByteSource.Util.bytes(salt), getName());
+            SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, user.getPasswordHash(), ByteSource.Util.bytes(salt), getName());
             return info;
         } catch (AuthenticationException e) {
             log.error("# doGetAuthenticationInfo error , message={}", e.getMessage());
@@ -101,11 +104,11 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
         Object permisObj = session.getAttribute(Constants.PERMISSION_URL);
         if (null == permisObj) {
             // Collection<PermissionVo> pers = getPermissions(principal.getUser().getId());
-            Collection<PermissionVo> pers = authRemoteClient.getPermissions(principal.getUser().getId());
-            for (PermissionVo permission : pers) {
+            Collection<PermissionDto> pers = authenticationFacade.getPermissions(principal.getUser().getId());
+            for (PermissionDto permission : pers) {
                 permissions.add(permission.getUrl());
                 if (CollectionUtils.isNotEmpty(permission.getChildren())) {
-                    for (PermissionVo childrenPer : permission.getChildren()) {
+                    for (PermissionDto childrenPer : permission.getChildren()) {
                         permissions.add(childrenPer.getUrl());
                     }
                 }
@@ -119,7 +122,7 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
         Object roleNameObj = session.getAttribute(Constants.ROLE_CODE);
         if (null == roleNameObj) {
             // for (Role role : findRoleByUserId(principal.getUser().getId())) {
-            for (Role role : authRemoteClient.findRoleByUserId(principal.getUser().getId())) {
+            for (RoleDto role : authenticationFacade.findRoleByUserId(principal.getUser().getId())) {
                 roleCodes.add(role.getCode());
             }
             session.setAttribute(Constants.ROLE_CODE, roleCodes);

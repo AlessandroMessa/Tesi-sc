@@ -1,10 +1,11 @@
 package com.wangxin.consumer.freemarker.common;
 
-import java.util.Calendar;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 import javax.servlet.ServletContext;
 
-import com.wangxin.common.api.common.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -18,9 +19,12 @@ public class ApplicationContext implements ServletContextAware {
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationContext.class);
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+
+
     @Override
     public void setServletContext(ServletContext context) {
-        String datetime = DateUtil.dateToString(Calendar.getInstance().getTime(), DateUtil.fm_yyyyMMddHHmmssSSS);
+        String datetime = ZonedDateTime.now().format(FORMATTER);
         String contextPath = context.getContextPath();
         log.info("# version={} , contextPath={}", datetime, contextPath);
         context.setAttribute("version_css", datetime);
