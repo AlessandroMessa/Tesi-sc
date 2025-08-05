@@ -1,6 +1,6 @@
 package com.wangxin.consumer.service.news;
 
-import com.wangxin.common.api.model.simple.News;
+
 import com.github.pagehelper.PageInfo;
 import com.wangxin.consumer.service.news.dto.NewsDto;
 
