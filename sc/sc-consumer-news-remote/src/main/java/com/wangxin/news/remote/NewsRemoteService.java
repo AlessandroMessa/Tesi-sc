@@ -5,7 +5,6 @@ import com.github.pagehelper.PageInfo;
 import com.wangxin.consumer.contract.news.NewsService;
 import com.wangxin.consumer.contract.news.dto.NewsDto;
 import com.wangxin.news.remote.mapper.NewsMapper;
-import com.wangxin.feign.web.remote.simple.NewsRemoteClient;
 import com.wangxin.news.remote.mapper.PageInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

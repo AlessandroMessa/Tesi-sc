@@ -1,10 +1,11 @@
-package com.wangxin.feign.web.hystrix.simple;
+package com.wangxin.news.remote.hystrix;
 
 import com.github.pagehelper.PageInfo;
 import com.wangxin.common.api.common.exception.BusinessException;
 import com.wangxin.common.api.common.exception.RemoteRequestExcepton;
 import com.wangxin.common.api.model.simple.News;
-import com.wangxin.feign.web.remote.simple.NewsRemoteClient;
+
+import com.wangxin.news.remote.NewsRemoteClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class NewsRemoteClientHystrix implements NewsRemoteClient {
 
-    private static final Logger log = LoggerFactory.getLogger(NewsRemoteClient.class);
+    private static final Logger log = LoggerFactory.getLogger(NewsRemoteClientHystrix.class);
 
     @Override
     public Boolean addNews(News news) throws BusinessException {
