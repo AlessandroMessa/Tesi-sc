@@ -6,16 +6,15 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import com.wangxin.common.api.common.constants.Constants;
-import com.wangxin.common.api.common.exception.BusinessException;
-import com.wangxin.common.api.common.salt.Encodes;
-import com.wangxin.common.api.model.auth.PermissionVo;
-import com.wangxin.common.api.model.auth.Role;
-import com.wangxin.common.api.model.auth.User;
+
+
 import com.wangxin.consumer.contract.auth.AuthService;
 import com.wangxin.consumer.contract.auth.dto.PermissionDto;
 import com.wangxin.consumer.contract.auth.dto.RoleDto;
 import com.wangxin.consumer.contract.auth.dto.UserDto;
+import com.wangxin.consumer.contract.auth.exception.InvalidParameterException;
+import com.wangxin.consumer.service.common.ConsumerConstants;
+import com.wangxin.consumer.service.common.SaltService;
 import com.wangxin.consumer.thymeleaf.common.shiro.vo.Principal;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -45,6 +44,8 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
 
     @Autowired
     private AuthService authService;
+    @Autowired
+    private SaltService saltService;
 
     /**
      * 认证回调函数,登录时调用.
@@ -61,17 +62,17 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
 
             if (StringUtils.isBlank(username)) {
                 log.error("## 非法登录 .");
-                throw new BusinessException("user.illegal.login.error", "非法用户身份");
+                throw new InvalidParameterException("user.illegal.login.error", "非法用户身份");
             }
             // User user = findUserByName(username);
             UserDto user = authService.findUserByName(username);
 
             if (null == user) {
                 log.error("## 用户不存在={} .", username);
-                throw new BusinessException("user.login.error", "账号或密码错误");
+                throw new InvalidParameterException("user.login.error", "账号或密码错误");
             }
 
-            byte[] salt = Encodes.decodeHex(user.getSaltHex());
+            byte[] salt = saltService.decodeHex(user.getSaltHex());
 
             Principal principal = new Principal();
             principal.setUser(user);
@@ -79,7 +80,7 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
             principal.setRoles(authService.findRoleByUserId(user.getId()));
 
             // SecurityUtils.getSubject().getSession().setAttribute(Constants.PERMISSION_SESSION, getPermissions(user.getId()));
-            SecurityUtils.getSubject().getSession().setAttribute(Constants.PERMISSION_SESSION, authService.getPermissions(user.getId()));
+            SecurityUtils.getSubject().getSession().setAttribute(ConsumerConstants.PERMISSION_SESSION, authService.getPermissions(user.getId()));
 
             SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, user.getPasswordHash(), ByteSource.Util.bytes(salt), getName());
             return info;
@@ -101,7 +102,7 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
         Session session = SecurityUtils.getSubject().getSession();
         // ---
         Set<String> permissions = new HashSet<String>();
-        Object permisObj = session.getAttribute(Constants.PERMISSION_URL);
+        Object permisObj = session.getAttribute(ConsumerConstants.PERMISSION_URL);
         if (null == permisObj) {
             // Collection<PermissionVo> pers = getPermissions(principal.getNews().getId());
             Collection<PermissionDto> pers = authService.getPermissions(principal.getUser().getId());
@@ -113,19 +114,19 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
                     }
                 }
             }
-            session.setAttribute(Constants.PERMISSION_URL, permissions);
+            session.setAttribute(ConsumerConstants.PERMISSION_URL, permissions);
         } else {
             permissions = (Set<String>) permisObj;
         }
 
         Set<String> roleCodes = new HashSet<String>();
-        Object roleNameObj = session.getAttribute(Constants.ROLE_CODE);
+        Object roleNameObj = session.getAttribute(ConsumerConstants.ROLE_CODE);
         if (null == roleNameObj) {
             // for (Role role : findRoleByUserId(principal.getNews().getId())) {
             for (RoleDto role : authService.findRoleByUserId(principal.getUser().getId())) {
                 roleCodes.add(role.getCode());
             }
-            session.setAttribute(Constants.ROLE_CODE, roleCodes);
+            session.setAttribute(ConsumerConstants.ROLE_CODE, roleCodes);
         } else {
             roleCodes = (Set<String>) roleNameObj;
         }

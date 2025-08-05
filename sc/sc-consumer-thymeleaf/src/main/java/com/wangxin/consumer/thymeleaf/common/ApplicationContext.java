@@ -1,5 +1,7 @@
 package com.wangxin.consumer.thymeleaf.common;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 import javax.servlet.ServletContext;
@@ -18,12 +20,14 @@ public class ApplicationContext implements ServletContextAware {
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationContext.class);
 
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
+
     // @Autowired
     // private DiscoveryClient client;
 
     @Override
     public void setServletContext(ServletContext context) {
-        String datetime = DateUtil.dateToString(Calendar.getInstance().getTime(), DateUtil.fm_yyyyMMddHHmmssSSS);
+        String datetime = ZonedDateTime.now().format(FORMATTER);
         String contextPath = context.getContextPath();
         context.setAttribute("version_css", datetime);
         context.setAttribute("version_js", datetime);
