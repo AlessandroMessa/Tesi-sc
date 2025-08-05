@@ -5,9 +5,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.wangxin.consumer.contract.auth.dto.ConsumerConstants;
+import com.wangxin.consumer.contract.auth.exception.InvalidParameterException;
 import com.wangxin.consumer.contract.news.NewsService;
 import com.wangxin.consumer.contract.news.dto.NewsDto;
-import com.wangxin.feign.web.remote.simple.NewsRemoteClient;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
-import com.wangxin.common.api.common.exception.BusinessException;
-import com.wangxin.common.api.model.simple.News;
+
 
 /**
  * @author 王鑫
@@ -94,7 +95,7 @@ public class NewsController {
         log.info("# ajax加载新闻对象");
         NewsDto news = newsService.findNewsById(id);
         if (null == news)
-            throw new BusinessException("非法参数");
+            throw new InvalidParameterException("非法参数");
         map.addAttribute("news", news);
         return "view/news/edit_form";
     }
