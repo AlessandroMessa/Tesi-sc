@@ -27,6 +27,8 @@
 		<module>sc-feign</module>
 		<module>sc-turbine</module>
 		<module>sc-consumer-service</module>
+        <module>sc-consumer-contract-news</module>
+		<module>sc-consumer-news-remote</module>
 	</modules>
 
 	<properties>

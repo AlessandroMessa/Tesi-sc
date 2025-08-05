@@ -7,9 +7,10 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
-import com.wangxin.consumer.service.exception.InvalidParameterException;
-import com.wangxin.consumer.service.news.NewsService;
-import com.wangxin.consumer.service.news.dto.NewsDto;
+import com.wangxin.consumer.contract.news.NewsService;
+import com.wangxin.consumer.contract.news.exception.InvalidParameterException;
+
+import com.wangxin.consumer.contract.news.dto.NewsDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

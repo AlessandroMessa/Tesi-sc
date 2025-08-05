@@ -1,7 +1,8 @@
-package com.wangxin.consumer.service.news.mapper;
+package com.wangxin.news.remote.mapper;
 
 import com.wangxin.common.api.model.simple.News;
-import com.wangxin.consumer.service.news.dto.NewsDto;
+import com.wangxin.consumer.contract.news.dto.NewsDto;
+
 
 public class NewsMapper {
 

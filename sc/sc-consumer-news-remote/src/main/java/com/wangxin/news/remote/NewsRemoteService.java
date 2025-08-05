@@ -1,20 +1,21 @@
-package com.wangxin.consumer.service.news.impl;
+package com.wangxin.news.remote;
 
-import com.wangxin.consumer.service.news.NewsService;
-import com.wangxin.consumer.service.news.dto.NewsDto;
-import com.wangxin.consumer.service.news.mapper.NewsMapper;
-import com.wangxin.consumer.service.news.mapper.PageInfoMapper;
+
+import com.github.pagehelper.PageInfo;
+import com.wangxin.consumer.contract.news.NewsService;
+import com.wangxin.consumer.contract.news.dto.NewsDto;
+import com.wangxin.news.remote.mapper.NewsMapper;
+import com.wangxin.feign.web.remote.simple.NewsRemoteClient;
+import com.wangxin.news.remote.mapper.PageInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.pagehelper.PageInfo;
-import com.wangxin.feign.web.remote.simple.NewsRemoteClient;
 
 @Service
 public class NewsRemoteService implements NewsService {
 
     @Autowired
-    private  NewsRemoteClient newsRemoteClient;
+    private NewsRemoteClient newsRemoteClient;
 
     @Override
     public NewsDto getNews() {

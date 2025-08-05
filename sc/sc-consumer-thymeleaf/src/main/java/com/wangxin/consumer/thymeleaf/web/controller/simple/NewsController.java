@@ -5,10 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.wangxin.consumer.service.exception.InvalidParameterException;
-import com.wangxin.consumer.service.news.NewsService;
-import com.wangxin.consumer.service.news.dto.NewsDto;
 
+import com.wangxin.consumer.contract.news.NewsService;
+import com.wangxin.consumer.contract.news.dto.NewsDto;
+import com.wangxin.consumer.contract.news.exception.InvalidParameterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

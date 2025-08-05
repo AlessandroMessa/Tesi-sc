@@ -1,8 +1,9 @@
-package com.wangxin.consumer.service.news;
+package com.wangxin.consumer.contract.news;
 
 
 import com.github.pagehelper.PageInfo;
-import com.wangxin.consumer.service.news.dto.NewsDto;
+import com.wangxin.consumer.contract.news.dto.NewsDto;
+
 
 public interface NewsService {
     NewsDto getNews();

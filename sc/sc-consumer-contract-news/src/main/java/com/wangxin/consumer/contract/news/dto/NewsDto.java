@@ -1,4 +1,4 @@
-package com.wangxin.consumer.service.news.dto;
+package com.wangxin.consumer.contract.news.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
