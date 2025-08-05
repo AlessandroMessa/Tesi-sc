@@ -1,4 +1,4 @@
-package com.wangxin.consumer.thymeleaf.common.shiro.vo;
+package com.wangxin.consumer.thymeleaf.common.shiro;
 
 import com.wangxin.consumer.contract.auth.dto.RoleDto;
 import com.wangxin.consumer.contract.auth.dto.UserDto;

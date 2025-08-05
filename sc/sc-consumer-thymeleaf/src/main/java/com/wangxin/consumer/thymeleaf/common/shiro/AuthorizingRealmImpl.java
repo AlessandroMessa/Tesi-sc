@@ -15,7 +15,6 @@ import com.wangxin.consumer.contract.auth.dto.UserDto;
 import com.wangxin.consumer.contract.auth.exception.InvalidParameterException;
 import com.wangxin.consumer.service.common.ConsumerConstants;
 import com.wangxin.consumer.service.common.SaltService;
-import com.wangxin.consumer.thymeleaf.common.shiro.vo.Principal;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
