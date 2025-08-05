@@ -1,4 +1,4 @@
-package com.wangxin.consumer.service.common;
+package com.wangxin.consumer.contract.auth.dto;
 
 public final class ConsumerConstants {
     private ConsumerConstants() {}

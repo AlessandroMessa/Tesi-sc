@@ -11,9 +11,10 @@ import com.wangxin.consumer.contract.auth.dto.PermissionDto;
 import com.wangxin.consumer.contract.auth.dto.RoleDto;
 import com.wangxin.consumer.contract.auth.dto.UserDto;
 import com.wangxin.consumer.contract.auth.exception.InvalidParameterException;
-import com.wangxin.consumer.service.common.ConsumerConstants;
-import com.wangxin.consumer.service.common.SaltService;
+import com.wangxin.consumer.contract.auth.dto.ConsumerConstants;
+import com.wangxin.consumer.contract.auth.SaltService;
 
+import com.wangxin.consumer.contract.auth.facade.AuthenticationFacade;
 import com.wangxin.consumer.jsp.common.shiro.vo.Principal;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -35,9 +36,7 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
 
     private static final Logger log = LoggerFactory.getLogger(AuthorizingRealmImpl.class);
     @Autowired
-    private AuthService authService;
-    @Autowired
-    private SaltService saltService;
+    private AuthenticationFacade authenticationFacade;
 
 
     @Override
@@ -50,17 +49,17 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
             throw new InvalidParameterException("user.illegal.login.error");
         }
 
-        UserDto user = authService.findUserByName(username);
+        UserDto user = authenticationFacade.findUserByName(username);
         if (user == null) {
             log.error("User not found: {}", username);
             throw new InvalidParameterException("user.login.error");
         }
 
-        byte[] salt = saltService.decodeHex(user.getSaltHex());
+        byte[] salt = authenticationFacade.decodeHex(user.getSaltHex());
 
         Principal principal = new Principal();
         principal.setUser(user);
-        principal.setRoles(authService.findRoleByUserId(user.getId()));
+        principal.setRoles(authenticationFacade.findRoleByUserId(user.getId()));
 
         return new SimpleAuthenticationInfo(
                 principal,
@@ -84,7 +83,7 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
         Set<String> permissions = (Set<String>) session.getAttribute(ConsumerConstants.PERMISSION_URL);
         if (permissions == null) {
             permissions = new HashSet<String>();
-            for (PermissionDto p : authService.getPermissions(principal.getUser().getId())) {
+            for (PermissionDto p : authenticationFacade.getPermissions(principal.getUser().getId())) {
                 permissions.add(p.getUrl());
                 if (CollectionUtils.isNotEmpty(p.getChildren())) {
                     for (PermissionDto c : p.getChildren()) {
@@ -99,7 +98,7 @@ public class AuthorizingRealmImpl extends AuthorizingRealm {
         Set<String> roleCodes = (Set<String>) session.getAttribute(ConsumerConstants.ROLE_CODE);
         if (roleCodes == null) {
             roleCodes = new HashSet<String>();
-            for (RoleDto r : authService.findRoleByUserId(principal.getUser().getId())) {
+            for (RoleDto r : authenticationFacade.findRoleByUserId(principal.getUser().getId())) {
                 roleCodes.add(r.getCode());
             }
             session.setAttribute(ConsumerConstants.ROLE_CODE, roleCodes);
